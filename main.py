@@ -1,9 +1,12 @@
 from functions.clearConsole import clearConsole
 from functions.getAdGroupMember import getAdGroupMember
-from functions.openGithub import openGithub 
+from functions.getGroupsMemberOf import getGroupsMemberOf
+from functions.copyMemberOf import copyMemberOf
+from functions.openGithub import openGithub
 from functions.copyClipboard import copyClipboard
 from functions.playYoutube import playYoutube
 from functions.exportCsv import exportCSV
+from functions.openExplorer import openExplorer
 import customtkinter
 
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
@@ -16,7 +19,6 @@ class App(customtkinter.CTk):
         # configure window
         self.title("ActiveDirectoryManager")
         self.geometry(f"{1100}x{600}")
-        self.resizable(False, False)
         # configure grid layout (4x4)
         self.grid_columnconfigure(1, weight=1)
         self.grid_columnconfigure((2, 3), weight=0)
@@ -47,7 +49,7 @@ class App(customtkinter.CTk):
         self.tabview.add("Actions")
         self.tabview.tab("Actions").grid_columnconfigure(0, weight=1)  # configure grid of individual tabs
 
-        self.optionmenu_1 = customtkinter.CTkButton(self.tabview.tab("Actions"), text="Copy to Clipboard", command=lambda: copyClipboard(self))
+        self.optionmenu_1 = customtkinter.CTkButton(self.tabview.tab("Actions"), text="Copy to clipboard", command=lambda: copyClipboard(self))
         self.optionmenu_1.grid(row=0, column=0, padx=20, pady=(20, 10))
         
         self.string_input_button = customtkinter.CTkButton(self.tabview.tab("Actions"), text="Do something", command=lambda: getAdGroupMember(self))
@@ -56,17 +58,28 @@ class App(customtkinter.CTk):
         self.string_input_button = customtkinter.CTkButton(self.tabview.tab("Actions"), text="Clear console", command=lambda: clearConsole(self))
         self.string_input_button.grid(row=4, column=0, padx=20, pady=(10, 10))
 
+        self.string_input_button = customtkinter.CTkButton(self.tabview.tab("Actions"), text="Open file explorer", command=lambda: openExplorer(self))
+        self.string_input_button.grid(row=5, column=0, padx=20, pady=(10, 10))
+
         # create scrollable frame
         self.scrollable_frame = customtkinter.CTkScrollableFrame(self, label_text="Scripts")
         self.scrollable_frame.grid(row=1, column=2, padx=(20, 0), pady=(20, 0), sticky="nwes")
         self.scrollable_frame.grid_columnconfigure(0, weight=1)
         self.scrollable_frame_switches = []
         customtkinter.CTkButton(master=self.scrollable_frame, text="Get Members AD Group", command=lambda: getAdGroupMember(self)).grid(row=0, column=0, padx=20, pady=(5, 10))
-        customtkinter.CTkButton(master=self.scrollable_frame, text="Script 2", command=lambda: getAdGroupMember(self)).grid(row=1, column=0, padx=20, pady=(10, 10))
-        customtkinter.CTkButton(master=self.scrollable_frame, text="Script 3", command=lambda: getAdGroupMember(self)).grid(row=2, column=0, padx=20, pady=(10, 10))
+        customtkinter.CTkButton(master=self.scrollable_frame, text="Get groups of member", command=lambda: getGroupsMemberOf(self)).grid(row=1, column=0, padx=20, pady=(10, 10))
+        customtkinter.CTkButton(master=self.scrollable_frame, text="Copy user permissions", command=lambda: copyMemberOf(self)).grid(row=2, column=0, padx=20, pady=(10, 10))
         customtkinter.CTkButton(master=self.scrollable_frame, text="Script 4", command=lambda: getAdGroupMember(self)).grid(row=3, column=0, padx=20, pady=(10, 10))
         customtkinter.CTkButton(master=self.scrollable_frame, text="Script 5", command=lambda: getAdGroupMember(self)).grid(row=4, column=0, padx=20, pady=(10, 10))
         
+        # Create another tabview
+        self.tabview_2 = customtkinter.CTkTabview(self, width=250)
+        self.tabview_2.grid(row=1, column=1, padx=(20, 0), pady=(5, 0), sticky="nsew")
+        self.tabview_2.add("Script overview")
+        self.tabview_2.tab("Script overview").grid_columnconfigure(0, weight=1)
+       
+        self.optionmenu_1.grid(row=0, column=0, padx=20, pady=(20, 10))
+
         self.appearance_mode_optionemenu.set("Dark")
         
         self.textbox.insert("0.0", "Welcome to ActiveDirectoryManager!\n")

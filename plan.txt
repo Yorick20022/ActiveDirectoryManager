@@ -1,0 +1,13 @@
+1. Variable met informatie wanneer ww van user voor het laatst is aangepast
+2. Converteer een INT64 object naar een dag bijvoorbeeld 133468595741601123
+3. haal de default password policy op van een domain
+4. Bereken hoe lang het het geleden is dat het wachtwoord opnieuw is ingesteld (dag van vandaag - password last set date)
+5. display "ja" of "nee" met de vraag "Password change required?" middels een if statement
+
+
+j.mubarak
+paul.beune
+e.manen
+
+
+pyinstaller --noconfirm --onedir --windowed --add-data "C:\Users\Y.Mulder\AppData\Local\Programs\Python\Python312\Lib\site-packages\customtkinter;customtkinter\"  "C:\Development (xd)\Python\ActiveDirectoryManager\main.py"
