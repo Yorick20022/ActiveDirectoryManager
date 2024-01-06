@@ -1,19 +1,12 @@
 import subprocess
-import customtkinter
 
-def getPasswordStatus(self):
-    self.textbox.configure(state="normal")
-
-    # Get the input from the dialog
-    dialog = customtkinter.CTkInputDialog(text="Name of the user:", title="Get password status")
-    adUser = dialog.get_input()
-
+def listDisabledUsers(self):
     # Specify the path to your PowerShell script
-    powershell_script = r'scripts\getPasswordStatus.ps1'
+    powershell_script = r'scripts\listDisabledUsers.ps1'
 
     try:
         # Run the PowerShell script and pass the input as a parameter
-        scriptOutput = subprocess.check_output(['powershell', '-File', powershell_script, '-adUser', adUser], text=True, stderr=subprocess.STDOUT)
+        scriptOutput = subprocess.check_output(['powershell', '-File', powershell_script], text=True, stderr=subprocess.STDOUT)
 
         # Update the text in the custom Textbox with the PowerShell script output
         self.textbox.delete("0.0", "end")
@@ -24,3 +17,4 @@ def getPasswordStatus(self):
     finally:
         # Update the state of the custom Textbox to disabled
         self.textbox.configure(state="disabled")
+        
