@@ -8,10 +8,9 @@ from functions.openGithub import openGithub
 from functions.copyClipboard import copyClipboard
 from functions.openExplorer import openExplorer
 from functions.exitProgram import exitProgram
+from functions.changeTheme import change_appearance_mode_event
+from functions.consoleEntry import AppFunctions
 import customtkinter
-from PIL import Image
-import subprocess
-import threading
 
 customtkinter.set_appearance_mode("Dark")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -20,8 +19,8 @@ class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
 
+        # configure fonts for buttons 
         self.button_font = customtkinter.CTkFont(size=14, weight="bold", family="Calibri")
-
         # configure window
         self.title("ActiveDirectoryManager")
         self.geometry(f"{1100}x{600}")
@@ -42,7 +41,7 @@ class App(customtkinter.CTk):
         
         self.appearance_mode_label = customtkinter.CTkLabel(self.sidebar_frame, text="Appearance Mode:", anchor="w", font=self.button_font)
         self.appearance_mode_label.grid(row=5, column=0, padx=20, pady=(10, 0))
-        self.appearance_mode_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["Light", "Dark", "System"], command=lambda new_appearance_mode: self.change_appearance_mode_event(new_appearance_mode), font=self.button_font)
+        self.appearance_mode_optionemenu = customtkinter.CTkOptionMenu(self.sidebar_frame, values=["Light", "Dark", "System"], command=lambda new_appearance_mode: change_appearance_mode_event(self, new_appearance_mode), font=self.button_font)
         self.appearance_mode_optionemenu.grid(row=6, column=0, padx=20, pady=(10, 10))
 
         # Actions tabview
@@ -93,55 +92,14 @@ class App(customtkinter.CTk):
         self.textbox.insert("0.0", "Welcome to ActiveDirectoryManager!\n")
         self.textbox.configure(state="disabled")
 
-        # Entry
+        # Console entry
         self.entry = customtkinter.CTkEntry(master=self, width=600, corner_radius=5, border_width=0, placeholder_text="> _ ", font=customtkinter.CTkFont(size=15, weight="bold", family="Consolas"))
         self.entry.place(x=210, y=572, anchor="w")
-        self.entry.bind("<Return>", lambda event: self.execute_command(event))
+        app_functions = AppFunctions(self)  # Pass the instance of App to AppFunctions
+        self.entry.bind("<Return>", lambda event: app_functions.execute_command(event))
+        self.functions = app_functions  # Assign the functions instance to the App class
         self.process = None
 
-    def change_appearance_mode_event(self, new_appearance_mode: str):
-        customtkinter.set_appearance_mode(new_appearance_mode)
-
-    def execute_command(self, event):
-        self.textbox.configure(state="normal")
-        self.textbox.delete("0.0", "end")
-        # Get the command from the entry widget
-        command = self.entry.get()
-
-        if command.strip().lower() == 'cls':
-            self.textbox.delete("0.0", "end")
-            self.entry.delete(0, "end")
-            return
-
-        # Start a new process and run it in a separate thread
-        self.process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1, universal_newlines=True)
-
-        # Start a separate thread to read and display the output in real-time
-        threading.Thread(target=self.update_output).start()
-
-        # Clear the entry widget for the next command
-        self.entry.delete(0, "end")
-
-    def update_output(self):
-        # Read the output line by line
-        for line in self.process.stdout:
-            # Append the line to the textbox
-            self.textbox.configure(state="normal")
-            self.textbox.insert("end", line)
-            self.textbox.configure(state="disabled")
-        
-    def process_command(self, command):
-        try:
-            # Execute the command using subprocess
-            result = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT, text=True)
-        except subprocess.CalledProcessError as e:
-            # If there's an error, capture the output
-            result = e.output
-
-        return result
-
-    
-        
 if __name__ == "__main__":
     app = App()
     app.mainloop()
