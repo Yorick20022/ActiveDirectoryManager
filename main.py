@@ -89,7 +89,7 @@ class App(customtkinter.CTk):
         self.textbox = customtkinter.CTkTextbox(self, width=600, height=520, font=customtkinter.CTkFont(size=14, weight="bold", family="Consolas"))
         self.textbox.place(x=210, y=285, anchor="w")
         
-        self.textbox.insert("0.0", "Welcome to ActiveDirectoryManager!\n")
+        self.textbox.insert("0.0", "Welcome to ActiveDirectoryManager!")
         self.textbox.configure(state="disabled")
 
         # Console entry
