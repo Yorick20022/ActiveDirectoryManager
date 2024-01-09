@@ -1,1 +1,1 @@
-$disabledAccounts Search-ADAccount -AccountDisabled | Select-Object -ExpandProperty SamAccountName
+$disabledAccounts = Search-ADAccount -AccountDisabled | Select-Object -ExpandProperty SamAccountName
